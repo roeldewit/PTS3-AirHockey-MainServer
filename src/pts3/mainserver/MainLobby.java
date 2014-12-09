@@ -5,10 +5,24 @@
  */
 package pts3.mainserver;
 
+import Airhockey.Rmi.SerializableChatBox;
+import Airhockey.Rmi.SerializableGame;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+
 /**
  *
  * @author stijn
  */
-public class MainLobby {
+public class MainLobby extends UnicastRemoteObject {
+
+    private ArrayList<SerializableGame> games;
     
+    private SerializableChatBox chatbox;
+    
+    public MainLobby() throws RemoteException{
+        chatbox = new SerializableChatBox();
+        games = new ArrayList<>();
+    }
 }
