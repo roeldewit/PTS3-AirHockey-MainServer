@@ -17,12 +17,15 @@ import java.util.ArrayList;
  */
 public class MainLobby extends UnicastRemoteObject {
 
-    private ArrayList<SerializableGame> games;
+    private ArrayList<SerializableGame> busyGames;
+    
+    private ArrayList<SerializableGame> waitingGames;
     
     private SerializableChatBox chatbox;
     
     public MainLobby() throws RemoteException{
         chatbox = new SerializableChatBox();
-        games = new ArrayList<>();
+        busyGames = new ArrayList<>();
+        waitingGames = new ArrayList<>();
     }
 }
