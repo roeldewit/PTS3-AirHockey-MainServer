@@ -5,7 +5,7 @@
  */
 package pts3.mainserver;
 
-import Airhockey.Rmi.GameData;
+import Airhockey.Rmi.IMainLobby;
 import Airhockey.Rmi.SerializableChatBox;
 import Airhockey.Rmi.SerializableGame;
 import java.rmi.RemoteException;
