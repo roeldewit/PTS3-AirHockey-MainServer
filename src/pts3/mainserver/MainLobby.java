@@ -5,6 +5,7 @@
  */
 package pts3.mainserver;
 
+import Airhockey.Rmi.GameData;
 import Airhockey.Rmi.SerializableChatBox;
 import Airhockey.Rmi.SerializableGame;
 import java.rmi.RemoteException;
@@ -22,6 +23,8 @@ public class MainLobby extends UnicastRemoteObject {
     private ArrayList<SerializableGame> waitingGames;
 
     private SerializableChatBox chatbox;
+
+    private int gameId = 1;
 
     public MainLobby() throws RemoteException {
         chatbox = new SerializableChatBox();
@@ -41,8 +44,11 @@ public class MainLobby extends UnicastRemoteObject {
         return chatbox;
     }
 
-    public void addWaitingGame(SerializableGame game) {
+    public void addWaitingGame(String description, String hostIP, String username) {
+        SerializableGame game = new SerializableGame(gameId, description, hostIP, username);
+
         waitingGames.add(game);
+        gameId++;
     }
 
     public void startGame(SerializableGame game) {
