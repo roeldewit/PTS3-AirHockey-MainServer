@@ -18,14 +18,48 @@ import java.util.ArrayList;
 public class MainLobby extends UnicastRemoteObject {
 
     private ArrayList<SerializableGame> busyGames;
-    
+
     private ArrayList<SerializableGame> waitingGames;
-    
+
     private SerializableChatBox chatbox;
-    
-    public MainLobby() throws RemoteException{
+
+    public MainLobby() throws RemoteException {
         chatbox = new SerializableChatBox();
         busyGames = new ArrayList<>();
         waitingGames = new ArrayList<>();
+    }
+
+    public ArrayList<SerializableGame> getBusyGames() {
+        return busyGames;
+    }
+
+    public ArrayList<SerializableGame> getWaitingGames() {
+        return waitingGames;
+    }
+
+    public SerializableChatBox getChatBox() {
+        return chatbox;
+    }
+
+    public void addWaitingGame(SerializableGame game) {
+        waitingGames.add(game);
+    }
+
+    public void startGame(SerializableGame game) {
+        waitingGames.remove(game);
+        busyGames.add(game);
+    }
+
+    public SerializableGame joinGame(int id) {
+        SerializableGame game = null;
+
+        for (SerializableGame waitingGame : waitingGames) {
+            if (waitingGame.id == id) {
+                game = waitingGame;
+                break;
+            }
+        }
+
+        return game;
     }
 }
