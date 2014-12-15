@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package pts3.mainserver;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,27 +21,52 @@ import javafx.stage.Stage;
  * @author stijn
  */
 public class PTS3MainServer extends Application {
-    
+
+    private static final int portNumber = 1099;
+
+    private static final String bindingNameMainLobby = "MainLobby";
+
+    private Registry registry = null;
+    private MainLobby mainLobby = null;
+
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
-            
+
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
             }
         });
-        
+
         StackPane root = new StackPane();
         root.getChildren().add(btn);
-        
+
         Scene scene = new Scene(root, 300, 250);
-        
+
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Create registry at port number
+        try {
+            registry = LocateRegistry.createRegistry(portNumber);
+            System.out.println("Server: Registry created on port number " + portNumber);
+        } catch (RemoteException ex) {
+            System.out.println("Server: Cannot create registry");
+            System.out.println("Server: RemoteException: " + ex.getMessage());
+            registry = null;
+        }
+
+        // Bind main lobby using registry
+        try {
+            registry.rebind(bindingNameMainLobby, mainLobby);
+        } catch (Exception ex) {
+            System.out.println("Server: Cannot bind game controller");
+            System.out.println("Server: RemoteException: " + ex.getMessage());
+        }
     }
 
     /**
@@ -48,5 +75,5 @@ public class PTS3MainServer extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
