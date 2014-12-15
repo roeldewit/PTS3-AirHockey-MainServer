@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author stijn
  */
-public class MainLobby extends UnicastRemoteObject {
+public class MainLobby extends UnicastRemoteObject implements IMainLobby {
 
     private ArrayList<SerializableGame> busyGames;
 
@@ -32,18 +32,22 @@ public class MainLobby extends UnicastRemoteObject {
         waitingGames = new ArrayList<>();
     }
 
+    @Override
     public ArrayList<SerializableGame> getBusyGames() {
         return busyGames;
     }
 
+    @Override
     public ArrayList<SerializableGame> getWaitingGames() {
         return waitingGames;
     }
 
+    @Override
     public SerializableChatBox getChatBox() {
         return chatbox;
     }
 
+    @Override
     public void addWaitingGame(String description, String hostIP, String username) {
         SerializableGame game = new SerializableGame(gameId, description, hostIP, username);
 
@@ -51,11 +55,13 @@ public class MainLobby extends UnicastRemoteObject {
         gameId++;
     }
 
+    @Override
     public void startGame(SerializableGame game) {
         waitingGames.remove(game);
         busyGames.add(game);
     }
 
+    @Override
     public SerializableGame joinGame(int id) {
         SerializableGame game = null;
 
