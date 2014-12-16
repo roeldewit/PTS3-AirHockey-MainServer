@@ -44,7 +44,7 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
 
     @Override
     public SerializableChatBox getChatBox() {
-        return chatbox;
+        return chatbox.getSerializableChatBoxWithTenLastLines();
     }
 
     @Override
