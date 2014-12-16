@@ -62,7 +62,7 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
     }
 
     @Override
-    public SerializableGame joinGame(int id) {
+    public SerializableGame joinGame(int id, String username) {
         SerializableGame game = null;
 
         for (SerializableGame waitingGame : waitingGames) {
@@ -71,6 +71,8 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
                 break;
             }
         }
+        
+        game.usernames.add(username);
 
         return game;
     }
