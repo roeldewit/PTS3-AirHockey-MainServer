@@ -5,6 +5,7 @@
  */
 package pts3.mainserver;
 
+import Airhockey.Rmi.BasicPublisher;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -26,8 +27,14 @@ public class PTS3MainServer extends Application {
 
     private static final String bindingNameMainLobby = "MainLobby";
 
+    private static final String bindingNameChatBoxPublicer = "ChatBoxPublisher";
+
     private Registry registry = null;
     private MainLobby mainLobby = null;
+
+    private ChatBoxPublicer chatBoxPublicer;
+
+    private BasicPublisher basicPublisher;
 
     @Override
     public void start(Stage primaryStage) {
@@ -60,8 +67,19 @@ public class PTS3MainServer extends Application {
             registry = null;
         }
 
+        // Bind ChatboxPublicer using registry
+        try {
+            basicPublisher = new BasicPublisher(new String[]{"chatboxLines"});
+            chatBoxPublicer = new ChatBoxPublicer(basicPublisher);
+            registry.rebind(bindingNameChatBoxPublicer, chatBoxPublicer);
+        } catch (Exception ex) {
+            System.out.println("Server: Cannot bind game controller");
+            System.out.println("Server: RemoteException: " + ex.getMessage());
+        }
+        
         // Bind main lobby using registry
         try {
+            mainLobby = new MainLobby(chatBoxPublicer);
             registry.rebind(bindingNameMainLobby, mainLobby);
         } catch (Exception ex) {
             System.out.println("Server: Cannot bind game controller");
