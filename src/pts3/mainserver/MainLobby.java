@@ -6,7 +6,7 @@
 package pts3.mainserver;
 
 import Airhockey.Rmi.IMainLobby;
-import Airhockey.Rmi.SerializableChatBox;
+import Airhockey.Rmi.SerializableChatBox1;
 import Airhockey.Rmi.SerializableChatBoxLine;
 import Airhockey.Rmi.SerializableGame;
 import java.rmi.RemoteException;
@@ -23,14 +23,14 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
 
     private ArrayList<SerializableGame> waitingGames;
 
-    private SerializableChatBox chatbox;
+    private SerializableChatBox1 chatbox;
 
     private ChatBoxPublicer chatBoxPublicer;
 
     private int gameId = 1;
 
     public MainLobby(ChatBoxPublicer chatBoxPublicer) throws RemoteException {
-        chatbox = new SerializableChatBox();
+        chatbox = new SerializableChatBox1();
         busyGames = new ArrayList<>();
         waitingGames = new ArrayList<>();
         this.chatBoxPublicer = chatBoxPublicer;
@@ -47,7 +47,7 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
     }
 
     @Override
-    public SerializableChatBox getChatBox() {
+    public SerializableChatBox1 getChatBox() {
         return chatbox.getSerializableChatBoxWithTenLastLines();
     }
 
@@ -91,7 +91,7 @@ public class MainLobby extends UnicastRemoteObject implements IMainLobby {
 
     @Override
     public void WriteLine(String text, String username) {
-       SerializableChatBoxLine serializableChatBoxLine = chatbox.writeline(text, text);  
+       SerializableChatBoxLine serializableChatBoxLine = chatbox.writeline(text, username);  
        updateChatBoxLines(serializableChatBoxLine);
     }
 }
