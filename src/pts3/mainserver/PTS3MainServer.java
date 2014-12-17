@@ -38,14 +38,6 @@ public class PTS3MainServer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
-
-        Scene scene = new Scene(root, 300, 250);
-
-        primaryStage.setTitle("MainServer");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
         // Create registry at port number
         try {
             registry = LocateRegistry.createRegistry(portNumber);
@@ -60,12 +52,12 @@ public class PTS3MainServer extends Application {
         try {
             basicPublisher = new BasicPublisher(new String[]{"chatboxLines"});
             chatBoxPublicer = new ChatBoxPublicer(basicPublisher);
-            registry.rebind(bindingNameChatBoxPublicer, chatBoxPublicer);
+            registry.rebind(bindingNameChatBoxPublicer, basicPublisher);
         } catch (Exception ex) {
             System.out.println("Server: Cannot bind game controller");
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
-        
+
         // Bind main lobby using registry
         try {
             mainLobby = new MainLobby(chatBoxPublicer);
@@ -74,6 +66,25 @@ public class PTS3MainServer extends Application {
             System.out.println("Server: Cannot bind game controller");
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
+
+        Button btn = new Button();
+        btn.setText("stop");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(-1);
+            }
+        });
+
+        StackPane root = new StackPane();
+        root.getChildren().add(btn);
+
+        Scene scene = new Scene(root, 300, 250);
+
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     /**
