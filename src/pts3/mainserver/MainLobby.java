@@ -5,93 +5,112 @@
  */
 package pts3.mainserver;
 
-import Airhockey.Rmi.IMainLobby;
-import Airhockey.Rmi.SerializableChatBox1;
-import Airhockey.Rmi.SerializableChatBoxLine;
-import Airhockey.Rmi.SerializableGame;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import Airhockey.Rmi.*;
 import java.util.ArrayList;
+import pts3.Utils.ExtraArrayListFunctions;
+import pts3.mainserver.connection.Encoder;
+import pts3.mainserver.connection.IConnectionManager;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
- * @author stijn
+ * @author pieper126
  */
-public class MainLobby extends UnicastRemoteObject implements IMainLobby {
+public class MainLobby {
 
     private ArrayList<SerializableGame> busyGames;
 
     private ArrayList<SerializableGame> waitingGames;
 
-    private SerializableChatBox1 chatbox;
+    private final SerializableChatBox1 chatbox;
 
-    private ChatBoxPublicer chatBoxPublicer;
+    private final Encoder encoder;
 
-    private int gameId = 1;
+    private int nextGameID;
 
-    public MainLobby(ChatBoxPublicer chatBoxPublicer) throws RemoteException {
-        chatbox = new SerializableChatBox1();
+    private ArrayList<IConnectionManager> connectionManagers;
+
+    public MainLobby() {
         busyGames = new ArrayList<>();
         waitingGames = new ArrayList<>();
-        this.chatBoxPublicer = chatBoxPublicer;
+        chatbox = new SerializableChatBox1();
+
+        nextGameID = 0;
+        this.encoder = new Encoder();
+        this.connectionManagers = new ArrayList<>();
     }
 
-    @Override
-    public ArrayList<SerializableGame> getBusyGames() {
-        return busyGames;
+    public void sendBusyGames() {
+        throw  new NotImplementedException();
     }
 
-    @Override
-    public ArrayList<SerializableGame> getWaitingGames() {
-        return waitingGames;
+    public void sendWaitingGames() {
+        ArrayList<ArrayList<String>> sWaitingGames = new ArrayList<>();
+        
+        for(SerializableGame waitingGame : waitingGames){
+            sWaitingGames.add(ExtraArrayListFunctions.createsNodeArrayListWithEnetries(waitingGame.id + "", waitingGame.description, waitingGame.usernames.size() + "" ,waitingGame.hostIP));
+        }
+        
+        encoder.sendWaitingGame(sWaitingGames);
     }
 
-    @Override
-    public SerializableChatBox1 getChatBox() {
-        return chatbox.getSerializableChatBoxWithTenLastLines();
+    public void sendChatbox() {
+
+        ArrayList<SerializableChatBoxLine> chatboxlines = chatbox.getSerializableChatBoxWithTenLastLines().lines;
+        ArrayList<ArrayList<String>> sChatboxLines = new ArrayList<>();
+
+        for (SerializableChatBoxLine chatboxline : chatboxlines) {
+            ArrayList<String> sChatboxline = new ArrayList<>();
+
+            sChatboxline.add(chatboxline.player);
+            sChatboxline.add(chatboxline.text);
+
+            sChatboxLines.add(sChatboxline);
+        }
+
+        encoder.sendInitialChatBox(sChatboxLines);
     }
 
-    @Override
-    public void addWaitingGame(String description, String hostIP, String username) {
-        SerializableGame game = new SerializableGame(gameId, description, hostIP, username);
+    public void addNewWaitingGame(String description, String ipHost, String username) {
+        SerializableGame serializableGame = new SerializableGame(nextGameID, description, ipHost, username);
 
-        waitingGames.add(game);
-        gameId++;
+        nextGameID++;
+
+        waitingGames.add(serializableGame);
     }
 
-    @Override
-    public void startGame(SerializableGame game) {
-        waitingGames.remove(game);
-        busyGames.add(game);
+    public void startGame(int id) {
+        for (SerializableGame waitinggame : waitingGames) {
+            if (waitinggame.id == id) {
+                busyGames.add(waitinggame);
+                break;
+            }
+        }
     }
 
-    @Override
-    public SerializableGame joinGame(int id, String username) {
-        SerializableGame game = null;
-
-        for (SerializableGame waitingGame : waitingGames) {
-            if (waitingGame.id == id) {
-                game = waitingGame;
+    public void deleteGame(int id) {
+        for (SerializableGame waitinggame : waitingGames) {
+            if (waitinggame.id == id) {
+                busyGames.add(waitinggame);
                 break;
             }
         }
 
-        game.usernames.add(username);
-
-        return game;
-    }
-
-    protected void updateChatBoxLines(SerializableChatBoxLine serializableChatBoxLine) {
-        try {
-            chatBoxPublicer.informListeners(new SerializableChatBoxLine[]{serializableChatBoxLine});
-        } catch (RemoteException e) {
-            System.err.println(e.getMessage());
+        for (SerializableGame busyGame : busyGames) {
+            if (busyGame.id == id) {
+                busyGames.add(busyGame);
+                break;
+            }
         }
     }
 
-    @Override
-    public void WriteLine(String text, String username) {
-       SerializableChatBoxLine serializableChatBoxLine = chatbox.writeline(text, username);  
-       updateChatBoxLines(serializableChatBoxLine);
+    public void writeline(String username, String text) {
+        chatbox.writeline(username, text);
+
+        encoder.sendChatBoxLine(username, text);
+    }
+
+    public void addConnectionManager(IConnectionManager connectionManager) {
+        encoder.addManager(connectionManager);
     }
 }
