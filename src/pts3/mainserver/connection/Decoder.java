@@ -13,6 +13,11 @@ public class Decoder {
     
     IConnectionManager connectionManager;
 
+    /**
+     * Decoder decodes all incoming messages
+     * @param mainlobby
+     * @param connectionManager 
+     */
     public Decoder(MainLobby mainlobby, IConnectionManager connectionManager) {
         this.mainLobby = mainlobby;
         this.connectionManager = connectionManager;

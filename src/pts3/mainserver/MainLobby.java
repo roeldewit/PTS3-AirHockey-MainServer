@@ -34,6 +34,9 @@ public class MainLobby {
     
     private final ConnectionListener connectionListener;
 
+    /**
+     * the Lobby of the MainServer
+     */
     public MainLobby() {
         busyGames = new ArrayList<>();
         waitingGames = new ArrayList<>();

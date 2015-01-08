@@ -33,6 +33,11 @@ public class MainLobbyServer extends Thread implements IConnectionManager {
     
     private final MainLobby lobby;
 
+    /**
+     * Sends and recieves information to a specific client that is connected to it
+     * @param socket
+     * @param lobby 
+     */
     public MainLobbyServer(Socket socket, MainLobby lobby) {
         this.socket = socket;
         this.lobby = lobby;

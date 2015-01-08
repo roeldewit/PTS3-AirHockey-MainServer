@@ -11,6 +11,9 @@ public class Encoder {
 
     private ArrayList<IConnectionManager> connectionMangerList;
 
+    /**
+     * Encoder encodes all out going messages
+     */
     public Encoder() {
         this.connectionMangerList = new ArrayList<>();
     }

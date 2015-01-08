@@ -12,8 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pts3.mainserver.MainLobby;
 
+
 /**
- *
+ * 
  * @author pieper126
  */
 public class ConnectionListener extends Thread {
@@ -22,6 +23,10 @@ public class ConnectionListener extends Thread {
     
     private final MainLobby lobby;
 
+    /**
+     * contains the #Socket and acts as the entry point for clients
+     * @param lobby 
+     */
     public ConnectionListener(MainLobby lobby) {
         this.lobby = lobby;
     }
