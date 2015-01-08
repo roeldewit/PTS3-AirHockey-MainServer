@@ -37,7 +37,7 @@ public class MainLobbyServer extends Thread implements IConnectionManager {
         this.socket = socket;
         this.lobby = lobby;
         
-        decoder = new Decoder(lobby);
+        decoder = new Decoder(lobby, this);
     }
 
     @Override

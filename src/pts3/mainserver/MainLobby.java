@@ -50,21 +50,21 @@ public class MainLobby {
         return this.encoder;
     }
 
-    public void sendBusyGames() {
+    public void sendBusyGames(IConnectionManager connectionManager) {
         throw  new NotImplementedException();
     }
 
-    public void sendWaitingGames() {
+    public void sendWaitingGames(IConnectionManager connectionManager) {
         ArrayList<ArrayList<String>> sWaitingGames = new ArrayList<>();
         
         for(SerializableGame waitingGame : waitingGames){
             sWaitingGames.add(ExtraArrayListFunctions.createsNodeArrayListWithEnetries(waitingGame.id + "", waitingGame.description, waitingGame.usernames.size() + "" ,waitingGame.hostIP));
         }
         
-        encoder.sendWaitingGame(sWaitingGames);
+        encoder.sendWaitingGame(sWaitingGames, connectionManager);
     }
 
-    public void sendChatbox() {
+    public void sendChatbox(IConnectionManager connectionManager) {
 
         ArrayList<SerializableChatBoxLine> chatboxlines = chatbox.getSerializableChatBoxWithTenLastLines().lines;
         ArrayList<ArrayList<String>> sChatboxLines = new ArrayList<>();
@@ -78,10 +78,10 @@ public class MainLobby {
             sChatboxLines.add(sChatboxline);
         }
 
-        encoder.sendInitialChatBox(sChatboxLines);
+        encoder.sendInitialChatBox(sChatboxLines, connectionManager);
     }
 
-    public void addNewWaitingGame(String description, String ipHost, String username) {
+    public void addNewWaitingGame(String description, String ipHost, String username, IConnectionManager connectionManager) {
         SerializableGame serializableGame = new SerializableGame(nextGameID, description, ipHost, username);
 
         nextGameID++;

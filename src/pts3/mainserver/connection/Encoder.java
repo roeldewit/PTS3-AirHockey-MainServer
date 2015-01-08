@@ -29,7 +29,7 @@ public class Encoder {
         sendCommand(command);
     }
 
-    public synchronized void sendInitialChatBox(ArrayList<ArrayList<String>> chatboxlines) {
+    public synchronized void sendInitialChatBox(ArrayList<ArrayList<String>> chatboxlines, IConnectionManager connectionManager) {
         String command = Protocol.CHATBOX_LINES
                 + Protocol.SEPERATOR;
 
@@ -42,21 +42,21 @@ public class Encoder {
 
         command += Protocol.PROTOCOL_ENDER;
 
-        sendCommand(command);
+        connectionManager.sendCommand(command);
     }
 
-    public synchronized void sendGameID(int gameID) {
+    public synchronized void sendGameID(int gameID, IConnectionManager connectionManager) {
         String command = Protocol.GAME_ID
                 + Protocol.SEPERATOR
                 + gameID;
 
-        sendCommand(command);
+        connectionManager.sendCommand(command);
     }
-    
-    public synchronized void sendWaitingGame(ArrayList<ArrayList<String>> waitingGames){
+
+    public synchronized void sendWaitingGame(ArrayList<ArrayList<String>> waitingGames, IConnectionManager connectionManager) {
         String command = Protocol.CURRENT_OPENGAMES
                 + Protocol.SEPERATOR;
-        
+
         for (ArrayList<String> waitingGame : waitingGames) {
             command = waitingGame.get(0)
                     + Protocol.SEPERATOR
@@ -65,12 +65,12 @@ public class Encoder {
                     + waitingGame.get(2)
                     + Protocol.SEPERATOR
                     + waitingGame.get(3)
-                    + Protocol.SEPERATOR;                
+                    + Protocol.SEPERATOR;
         }
-        
+
         command += Protocol.PROTOCOL_ENDER;
-        
-        sendCommand(command);                
+
+        connectionManager.sendCommand(command);
     }
 
     public synchronized void sendCommand(String command) {

@@ -10,9 +10,12 @@ import pts3.mainserver.MainLobby;
 public class Decoder {
 
     MainLobby mainLobby;
+    
+    IConnectionManager connectionManager;
 
-    public Decoder(MainLobby mainlobby) {
+    public Decoder(MainLobby mainlobby, IConnectionManager connectionManager) {
         this.mainLobby = mainlobby;
+        this.connectionManager = connectionManager;
     }
 
     protected void receiveCommand(String command) {
@@ -27,19 +30,19 @@ public class Decoder {
 
             case Protocol.GET_CHATBOX_LINES:
                 Platform.runLater(() -> {
-                    mainLobby.sendChatbox();
+                    mainLobby.sendChatbox(connectionManager);
                 });
                 break;
 
             case Protocol.GET_CURRENT_OPENGAMES:
                 Platform.runLater(() -> {
-                    mainLobby.sendWaitingGames();
+                    mainLobby.sendWaitingGames(connectionManager);
                 });
                 break;
 
             case Protocol.GET_CURRENT_RUNNINGGAMES:
                 Platform.runLater(() -> {
-                    mainLobby.sendBusyGames();
+                    mainLobby.sendBusyGames(connectionManager);
                 });
                 break;
 
@@ -55,7 +58,7 @@ public class Decoder {
                 break;
             case Protocol.ADD_NEW_GAME:
                 Platform.runLater(() -> {
-                    mainLobby.addNewWaitingGame(splitter[1], splitter[2], splitter[3]);
+                    mainLobby.addNewWaitingGame(splitter[1], splitter[2], splitter[3], connectionManager);
                 });
                 break;
         }
