@@ -11,11 +11,11 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import static java.lang.Thread.interrupted;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pts3.mainserver.MainLobby;
 
 /**
  *
@@ -30,9 +30,14 @@ public class MainLobbyServer extends Thread implements IConnectionManager {
     private Decoder decoder;
 
     private boolean interrupted = false;
+    
+    private final MainLobby lobby;
 
-    public MainLobbyServer(Socket socket) throws RemoteException {
+    public MainLobbyServer(Socket socket, MainLobby lobby) {
         this.socket = socket;
+        this.lobby = lobby;
+        
+        decoder = new Decoder(lobby);
     }
 
     @Override

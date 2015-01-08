@@ -8,8 +8,10 @@ package pts3.mainserver;
 import Airhockey.Rmi.*;
 import java.util.ArrayList;
 import pts3.Utils.ExtraArrayListFunctions;
+import pts3.mainserver.connection.ConnectionListener;
 import pts3.mainserver.connection.Encoder;
 import pts3.mainserver.connection.IConnectionManager;
+import pts3.mainserver.connection.MainLobbyServer;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -29,6 +31,8 @@ public class MainLobby {
     private int nextGameID;
 
     private ArrayList<IConnectionManager> connectionManagers;
+    
+    private final ConnectionListener connectionListener;
 
     public MainLobby() {
         busyGames = new ArrayList<>();
@@ -38,6 +42,12 @@ public class MainLobby {
         nextGameID = 0;
         this.encoder = new Encoder();
         this.connectionManagers = new ArrayList<>();
+        
+        connectionListener = new ConnectionListener(this);        
+    }
+    
+    public Encoder getEncoder(){
+        return this.encoder;
     }
 
     public void sendBusyGames() {

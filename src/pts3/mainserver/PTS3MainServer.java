@@ -24,18 +24,7 @@ import javafx.stage.Stage;
  */
 public class PTS3MainServer extends Application {
 
-    private static final int portNumber = 1099;
-
-    private static final String bindingNameMainLobby = "MainLobby";
-
-    private static final String bindingNameChatBoxPublicer = "ChatBoxPublisher";
-
-    private Registry registry = null;
     private MainLobby mainLobby = null;
-
-    private ChatBoxPublicer chatBoxPublicer;
-
-    private BasicPublisher basicPublisher;
 
     @Override
     public void start(Stage primaryStage) {

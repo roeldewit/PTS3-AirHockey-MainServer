@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pts3.mainserver.MainLobby;
 
 /**
  *
@@ -18,8 +19,11 @@ import java.util.logging.Logger;
 public class ConnectionListener extends Thread {
 
     private boolean acceptMore = true;
+    
+    private final MainLobby lobby;
 
-    public ConnectionListener() {
+    public ConnectionListener(MainLobby lobby) {
+        this.lobby = lobby;
     }
 
     @Override
@@ -33,7 +37,8 @@ public class ConnectionListener extends Thread {
                 Socket socket = serverSocket.accept();
                 System.out.println("Server bound");        
                 
-                MainLobbyServer server = new MainLobbyServer(socket);                          
+                MainLobbyServer server = new MainLobbyServer(socket, lobby);        
+                new Thread(server).run();
             }
 
         } catch (IOException e) {
