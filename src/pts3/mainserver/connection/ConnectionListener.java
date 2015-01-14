@@ -36,7 +36,7 @@ public class ConnectionListener extends Thread {
         ServerSocket serverSocket = null;
         try {
             System.out.println("Starting connection listener...");
-            serverSocket = new ServerSocket(8189);
+            serverSocket = new ServerSocket(8190);
 
             while (acceptMore) {
                 Socket socket = serverSocket.accept();

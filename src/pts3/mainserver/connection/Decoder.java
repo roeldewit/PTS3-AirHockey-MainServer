@@ -24,6 +24,7 @@ public class Decoder {
     }
 
     protected void receiveCommand(String command) {
+        System.out.println("recieved command: " + command);
         String[] splitter = command.split(Protocol.SEPERATOR);
 
         switch (splitter[0]) {

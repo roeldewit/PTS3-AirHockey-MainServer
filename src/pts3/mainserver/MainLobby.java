@@ -33,6 +33,8 @@ public class MainLobby {
     private ArrayList<IConnectionManager> connectionManagers;
     
     private final ConnectionListener connectionListener;
+    
+    private Thread connectionListenerThread;
 
     /**
      * the Lobby of the MainServer
@@ -47,6 +49,9 @@ public class MainLobby {
         this.connectionManagers = new ArrayList<>();
         
         connectionListener = new ConnectionListener(this);        
+        
+        connectionListenerThread = new Thread(connectionListener);
+        connectionListenerThread.start();
     }
     
     public Encoder getEncoder(){
